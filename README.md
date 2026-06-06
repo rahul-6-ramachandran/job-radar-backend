@@ -81,3 +81,61 @@ source + externalJobId
 📡 REST API
 Fetch jobs
 Search jobs
+```
+
+
+## Project setup
+
+```bash
+$ npm install
+```
+
+## Compile and run the project
+
+```bash
+# docker
+$ docker compose up -d
+```
+
+
+
+## .env config
+
+```bash
+$ DATABASE_URL="postgresql://postgres:postgres@localhost:5432/jobradar"
+```
+
+## Run Prisma migrations
+```bash
+npx prisma migrate dev
+```
+
+
+
+## Start the server
+```bash
+# dev mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Apis
+```bash
+# get all jobs
+$ GET /jobs
+
+# search jobs
+$ GET /jobs?search=backend
+
+# filter by company
+$ GET /jobs?company=Postman
+
+
+# filter by company
+$ GET /jobs?remote=true
+
+# Sync Jobs Manually
+$ GET /sources/sync
+```
