@@ -50,3 +50,34 @@ Greenhouse / Lever / Ashby APIs
       PostgreSQL (Prisma)
             ↓
         REST API
+        
+📦 Features
+ Automated Job Sync
+Hourly cron job fetches latest job postings
+Supports multiple companies (Postman, Stripe, etc.)
+Smart Filtering
+
+Keeps only:
+
+Backend Engineer
+Full Stack Engineer
+Software Engineer (SDE)
+
+Removes:
+
+HR, Sales, Marketing, Recruiter roles
+Location Filtering
+Remote jobs
+
+India-based office roles
+🧠 Relevance Scoring (Optional Upgrade)
+Jobs ranked by relevance score
+Prioritizes backend / full-stack roles
+🗄️ Deduplication
+
+Prevents duplicates using:
+
+source + externalJobId
+📡 REST API
+Fetch jobs
+Search jobs
