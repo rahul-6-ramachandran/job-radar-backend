@@ -35,8 +35,36 @@ model Job {
   @@unique([source, externalJobId])
 }
 
+model Company {
+  id String @id @default(cuid())
+
+  name String @unique
+
+  ats String
+
+  board String
+
+  priority Int @default(3)
+
+  enabled Boolean @default(true)
+
+  category String?
+
+  bestFitRoles String?
+
+  techStack String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
 model WatchlistCompany {
   id          String   @id @default(cuid())
+
   companyName String   @unique
+
+  priority    Int      @default(1)
+
   createdAt   DateTime @default(now())
 }

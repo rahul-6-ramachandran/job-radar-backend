@@ -1,47 +1,38 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { Cron, CronExpression } from '@nestjs/schedule';
+
 
 import { JobsService } from '../../jobs/jobs.service';
-import { greenhouseCompanies } from '../../../constants';
 import { isRelevantJob, isRemoteJob } from '../../helpers/helpers';
 import { isAllowedLocation } from '../../helpers/location-filters';
+import { JobSourceAdapter } from '../interfaces/job-source.interface';
+import { Company } from '@prisma/client';
+import { AdapterRegistry } from '../registry/adapter.registry';
 
 @Injectable()
-export class GreenhouseService {
+export class GreenhouseService implements JobSourceAdapter {
+  readonly source = 'greenhouse';
+
   private readonly logger =
     new Logger(GreenhouseService.name);
 
-  private isRunning = false;
-
   constructor(
     private readonly jobsService: JobsService,
-  ) {}
 
-  @Cron(CronExpression.EVERY_HOUR)
-  async syncAll() {
-    if (this.isRunning) {
-      return;
-    }
-
-    this.isRunning = true;
-
-    try {
-      this.logger.log(
-        'Starting Greenhouse sync...',
-      );
-
-      for (const company of greenhouseCompanies) {
-        await this.syncCompany(
-          company.board,
-          company.companyName,
-        );
-      }
-    } finally {
-      this.isRunning = false;
-    }
+   registry: AdapterRegistry
+  ) {
+       registry.register(this);
   }
 
+
+  async sync(companies: Company[]) {
+  for (const company of companies) {
+    await this.syncCompany(
+      company.board!,
+      company.name,
+    );
+  }
+}
   async syncCompany(
     board: string,
     companyName: string,

@@ -41,18 +41,3 @@ export const engineeringDepartments = [
   'software engineering',
   'it'
 ];
-
-export const greenhouseCompanies = [
-  {
-    board: 'postman',
-    companyName: 'Postman',
-  },
-  {
-    board: 'stripe',
-    companyName: 'Stripe',
-  },
-  {
-    board: 'checkr',
-    companyName: 'Checkr',
-  },
-];
