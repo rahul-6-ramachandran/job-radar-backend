@@ -44,6 +44,8 @@ model Company {
 
   board String
 
+  careerUrl String?
+
   priority Int @default(3)
 
   enabled Boolean @default(true)

@@ -6,16 +6,22 @@ import { JobsService } from '../../jobs/jobs.service';
 import { leverCompanies } from './companies';
 import { isRelevantJob, isRemoteJob } from '../../helpers/helpers';
 import { isAllowedLocation } from '../../helpers/location-filters';
+import { JobSourceAdapter } from '../interfaces/job-source.interface';
+import { AdapterRegistry } from '../registry/adapter.registry';
 
 
 @Injectable()
-export class LeverService {
+export class LeverService implements JobSourceAdapter {
+  readonly source = 'lever';
   private readonly logger =
     new Logger(LeverService.name);
 
   constructor(
     private readonly jobsService: JobsService,
-  ) {}
+    private readonly registry: AdapterRegistry
+  ) {
+    this.registry.register(this)
+  }
 
   async syncAll() {
     for (const company of leverCompanies) {
@@ -31,6 +37,10 @@ export class LeverService {
             );
         }
     }
+  }
+
+  async sync(): Promise<void> {
+    // await this.syncAll();
   }
 
   async syncCompany(

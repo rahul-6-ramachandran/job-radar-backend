@@ -8,9 +8,12 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { WatchlistModule } from './watchlist/watchlist.module';
 import { CompanyModule } from './company/company.module';
 import { EngineModule } from './engine/engine.module';
+import { HttpModule } from './common/http/http.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { DiscoveryModule } from './discovery/discovery.module';
 
 @Module({
-  imports: [PrismaModule, JobsModule, SourcesModule, ScheduleModule.forRoot(), WatchlistModule, CompanyModule, EngineModule,],
+  imports: [PrismaModule, JobsModule, SourcesModule, ScheduleModule.forRoot(), WatchlistModule, CompanyModule, EngineModule, HttpModule, NotificationsModule, DiscoveryModule,],
   controllers: [AppController],
   providers: [AppService],
 })

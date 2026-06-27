@@ -1,21 +1,29 @@
-import { Controller, Get } from '@nestjs/common';
-import { GreenhouseService } from './greenhouse/greenhouse.service';
-import { LeverService } from './lever/lever.service';
+import { Controller, Get, Param } from '@nestjs/common';
+import { EngineService } from '../engine/engine.service';
 
-@Controller('sources')
-export class SourcesController {
+@Controller('engine')
+export class EngineController {
   constructor(
-    private readonly greenhouseService: GreenhouseService,
-      private readonly leverService: LeverService,
+    private readonly engineService: EngineService,
   ) {}
 
-  
-  @Get('lever-sync')
-async leverSync() {
-  await this.leverService.syncAll();
+  @Get('sync')
+  async syncAll() {
+    await this.engineService.sync();
 
-  return {
-    success: true,
-  };
-}
+    return {
+      success: true,
+    };
+  }
+
+  @Get('sync/:source')
+  async syncSource(
+    @Param('source') source: string,
+  ) {
+    await this.engineService.syncSource(source);
+
+    return {
+      success: true,
+    };
+  }
 }

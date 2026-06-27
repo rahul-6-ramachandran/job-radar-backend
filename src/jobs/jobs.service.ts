@@ -1,27 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateJobDto } from './DTO/jobs-create-dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { TelegramService } from '../notifications/telegram/telegram.service';
 
 @Injectable()
 export class JobsService {
+
+    private readonly logger =
+      new Logger(JobsService.name);
+  
 constructor(
     private readonly prisma: PrismaService,
+    private readonly telegramService: TelegramService,
   ) {}
     async upsertJob(job: CreateJobDto) {
-    return this.prisma.job.upsert({
+  const existing = await this.prisma.job.findUnique({
     where: {
       source_externalJobId: {
         source: job.source,
         externalJobId: job.externalJobId,
       },
     },
-
-    create: job,
-
-    update: {
-      ...job,
-    },
   });
+
+  if (existing) {
+    return this.prisma.job.update({
+      where: { id: existing.id },
+      data: job,
+    });
+  }
+
+  const createdJob = await this.prisma.job.create({
+    data: job,
+  });
+  try {
+    await this.telegramService.sendNewJob(createdJob);
+  } catch (error) {
+    this.logger.error(
+      'Failed to send Telegram notification',
+      error,
+    );
+  }
+
+  return createdJob;
 }
 async findAll(filters: {
   search?: string;

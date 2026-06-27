@@ -8,6 +8,8 @@ import { isAllowedLocation } from '../../helpers/location-filters';
 import { JobSourceAdapter } from '../interfaces/job-source.interface';
 import { Company } from '@prisma/client';
 import { AdapterRegistry } from '../registry/adapter.registry';
+import { HttpService } from '../../common/http/http.service';
+import { GreenhouseResponse } from './greenhous.types';
 
 @Injectable()
 export class GreenhouseService implements JobSourceAdapter {
@@ -18,6 +20,7 @@ export class GreenhouseService implements JobSourceAdapter {
 
   constructor(
     private readonly jobsService: JobsService,
+    private http: HttpService,
 
    registry: AdapterRegistry
   ) {
@@ -41,9 +44,8 @@ export class GreenhouseService implements JobSourceAdapter {
       const url =
         `https://boards-api.greenhouse.io/v1/boards/${board}/jobs`;
 
-      const { data } = await axios.get(url, {
-        timeout: 10000,
-      });
+      const data =
+          await this.http.get<GreenhouseResponse>(url);
 
       let synced = 0;
 

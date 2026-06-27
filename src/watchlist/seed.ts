@@ -1,0 +1,16 @@
+export const tier1Companies = [
+  'Stripe',
+  'Cloudflare',
+  'MongoDB',
+  'Databricks',
+  'Confluent',
+  'Atlassian',
+  'GitLab',
+  'Shopify',
+  'BrowserStack',
+  'Postman',   
+  'Razorpay',
+  'Chargebee',
+  'Freshworks',
+  'Juspay',
+];

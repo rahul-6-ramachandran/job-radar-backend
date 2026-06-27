@@ -3,9 +3,10 @@ import { JobsController } from './jobs.controller';
 import { JobsService } from './jobs.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { SourcesModule } from '../sources/sources.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
- imports: [PrismaModule],
+ imports: [PrismaModule, NotificationsModule],
   controllers: [JobsController],
   providers: [JobsService],
   exports: [JobsService],

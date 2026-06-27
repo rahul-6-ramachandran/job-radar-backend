@@ -21,6 +21,21 @@ export class EngineService {
   }
 
 
+    async syncSource(source: string) {
+    const adapter = this.registry
+        .getAdapters()
+        .find(a => a.source === source);
+
+    if (!adapter) {
+        throw new Error(`Unknown source: ${source}`);
+    }
+
+    const companies =
+        await this.companyService.findByATS(source);
+
+    await adapter.sync(companies);
+    }
+
     @Cron(CronExpression.EVERY_HOUR)
     async sync(){
 
