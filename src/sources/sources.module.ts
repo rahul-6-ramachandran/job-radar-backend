@@ -6,11 +6,12 @@ import { AdapterRegistry } from './registry/adapter.registry';
 import { GreenhouseService } from './greenhouse/greenhouse.service';
 import { EngineController } from './sources.controller';
 import { LeverService } from './lever/lever.service';
+import { AshbyService } from './ashby/ashby.service';
 
 @Module({
   imports: [JobsModule, HttpModule, forwardRef(() => EngineModule)],
-  providers: [AdapterRegistry, GreenhouseService, LeverService],
-  exports: [AdapterRegistry, GreenhouseService, LeverService],
+  providers: [AdapterRegistry, GreenhouseService, LeverService, AshbyService],
+  exports: [AdapterRegistry, GreenhouseService, LeverService, AshbyService],
   controllers: [EngineController],
 })
 export class SourcesModule {}

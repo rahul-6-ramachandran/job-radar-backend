@@ -46,6 +46,12 @@ model Company {
 
   careerUrl String?
 
+  homepageUrl String?
+
+  confidence      Int?      
+
+  lastVerifiedAt  DateTime?
+
   priority Int @default(3)
 
   enabled Boolean @default(true)

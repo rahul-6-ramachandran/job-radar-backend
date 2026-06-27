@@ -9,14 +9,14 @@ import { JobSourceAdapter } from '../interfaces/job-source.interface';
 import { Company } from '@prisma/client';
 import { AdapterRegistry } from '../registry/adapter.registry';
 import { HttpService } from '../../common/http/http.service';
-import { GreenhouseResponse } from './greenhous.types';
+import { GreenhouseResponse } from '../../types/ats/greenhous.types';
+import { BaseAdapter } from '../base/base.adapter';
+import { ATS } from '../../common/constants/ats';
 
 @Injectable()
-export class GreenhouseService implements JobSourceAdapter {
-  readonly source = 'greenhouse';
+export class GreenhouseService extends BaseAdapter {
+  readonly source = ATS.GREENHOUSE;
 
-  private readonly logger =
-    new Logger(GreenhouseService.name);
 
   constructor(
     private readonly jobsService: JobsService,
@@ -24,23 +24,18 @@ export class GreenhouseService implements JobSourceAdapter {
 
    registry: AdapterRegistry
   ) {
+    super()
        registry.register(this);
   }
 
+  protected async syncCompany(
+      company: Company,
+  ): Promise<void> {
+     const board = company.board!;
 
-  async sync(companies: Company[]) {
-  for (const company of companies) {
-    await this.syncCompany(
-      company.board!,
-      company.name,
-    );
-  }
-}
-  async syncCompany(
-    board: string,
-    companyName: string,
-  ) {
+    const companyName = company.name;
     try {
+
       const url =
         `https://boards-api.greenhouse.io/v1/boards/${board}/jobs`;
 

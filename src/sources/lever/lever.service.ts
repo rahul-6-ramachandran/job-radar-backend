@@ -8,50 +8,37 @@ import { isRelevantJob, isRemoteJob } from '../../helpers/helpers';
 import { isAllowedLocation } from '../../helpers/location-filters';
 import { JobSourceAdapter } from '../interfaces/job-source.interface';
 import { AdapterRegistry } from '../registry/adapter.registry';
+import { BaseAdapter } from '../base/base.adapter';
+import { HttpService } from '../../common/http/http.service';
+import { LeverResponse } from '../../types/ats/lever.types';
+import { ATS } from '../../common/constants/ats';
+import { Company } from '@prisma/client';
 
 
 @Injectable()
-export class LeverService implements JobSourceAdapter {
-  readonly source = 'lever';
-  private readonly logger =
-    new Logger(LeverService.name);
+export class LeverService extends BaseAdapter {
+  readonly source = ATS.LEVER
 
   constructor(
     private readonly jobsService: JobsService,
-    private readonly registry: AdapterRegistry
+    private readonly registry: AdapterRegistry,
+        private http: HttpService,
   ) {
+    super()
     this.registry.register(this)
   }
 
-  async syncAll() {
-    for (const company of leverCompanies) {
-        try {
-            await this.syncCompany(
-            company.company,
-            company.companyName,
-            );
-        } catch (error) {
-            this.logger.error(
-            `Failed ${company.companyName}`,
-            error,
-            );
-        }
-    }
-  }
+protected async syncCompany(
+    company: Company
+): Promise<void> {
+  const board = company.board!;
 
-  async sync(): Promise<void> {
-    // await this.syncAll();
-  }
-
-  async syncCompany(
-    company: string,
-    companyName: string,
-  ) {
+    const companyName = company.name;
     try {
       const url =
-        `https://api.lever.co/v0/postings/${company}?mode=json`;
+        `https://api.lever.co/v0/postings/${board}?mode=json`;
 
-      const { data } = await axios.get(url);
+      const data = await this.http.get<LeverResponse>(url);
 
       let synced = 0;
 

@@ -4,3 +4,8 @@ export interface DetectionResult {
   confidence: number;
   careersUrl?: string;
 }
+
+export interface DiscoveryContext {
+  url: string;
+  html: string;
+}
