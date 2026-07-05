@@ -1,33 +1,44 @@
 import { Injectable } from "@nestjs/common";
-import { AtsDetector } from "../../sources/interfaces/detector.interface";
+import { ATS } from "../../common/constants/ats";
 import { DetectionResult, DiscoveryContext } from "../types/detection-result.types";
+import { AtsDetector } from "../../sources/interfaces/detector.interface";
+import { DetectorRegistry } from "../../sources/registry/detector.registry";
 
 @Injectable()
 export class LeverDetector
-  implements AtsDetector
-{
-  name = 'lever';
+implements AtsDetector {
 
-  async detect(
-    context: DiscoveryContext,
-  ): Promise<DetectionResult | null> {
-    const patterns = [
-      /jobs\.lever\.co\/([a-zA-Z0-9_-]+)/i,
-      /api\.lever\.co\/v0\/postings\/([a-zA-Z0-9_-]+)/i,
-    ];
+    name = ATS.LEVER;
+ constructor(
+    registry: DetectorRegistry,
+  ) {
+    registry.register(this);
+  }
 
-    for (const pattern of patterns) {
-      const match = context.html.match(pattern);
+    async detect(
+        context: DiscoveryContext,
+    ): Promise<DetectionResult | null> {
 
-      if (match) {
+        const match =
+            context.html.match(
+                /jobs\.lever\.co\/([a-zA-Z0-9-]+)/i,
+            );
+
+        if (!match)
+            return null;
+
         return {
-          ats: 'lever',
-          board: match[1].toLowerCase(),
-          confidence: 100,
+
+            ats: ATS.LEVER,
+
+            board: match[1],
+
+            confidence: 100,
+
+            detectedFrom: "lever-script",
+
         };
-      }
+
     }
 
-    return null;
-  }
 }

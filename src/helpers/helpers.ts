@@ -15,7 +15,7 @@ export const isRelevantJob = (title: string): boolean => {
 };
 
 export const isRemoteJob = (
-  location?: string,
+  location?: string | null,
 ): boolean => {
   if (!location) {
     return false;

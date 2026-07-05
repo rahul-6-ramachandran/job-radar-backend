@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { AtsDetector } from '../../sources/interfaces/detector.interface';
 import { DetectionResult, DiscoveryContext } from '../types/detection-result.types';
+import { DetectorRegistry } from '../../sources/registry/detector.registry';
 
 @Injectable()
 export class GreenhouseDetector
   implements AtsDetector
 {
   name = 'greenhouse';
+
+   constructor(
+    registry: DetectorRegistry,
+  ) {
+    registry.register(this);
+  }
 
   async detect(
     context: DiscoveryContext,
@@ -24,6 +31,7 @@ export class GreenhouseDetector
           ats: 'greenhouse',
           board: match[1].toLowerCase(),
           confidence: 100,
+          detectedFrom: 'greenhouse-script',
         };
       }
     }

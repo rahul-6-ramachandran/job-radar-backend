@@ -5,11 +5,10 @@ import { AtsDetector } from "../../sources/interfaces/detector.interface";
 import { DetectorRegistry } from "../../sources/registry/detector.registry";
 
 @Injectable()
-export class AshbyDetector
+export class WorkdayDetector
 implements AtsDetector {
 
-    name = ATS.ASHBY;
-
+    name = ATS.WORKDAY;
      constructor(
     registry: DetectorRegistry,
   ) {
@@ -23,17 +22,17 @@ implements AtsDetector {
 
         const match =
             context.html.match(
-               /careers\.ashbyhq\.com\/([a-zA-Z0-9-]+)/i
+               /myworkdayjobs\.com\/([^"' ]+)/i
             );
 
         if (!match)
             return null;
 
         return {
-            ats:ATS.ASHBY,
+            ats:ATS.WORKDAY,
             board:match[1],
             confidence:100,
-            detectedFrom:"ashby-script"
+            detectedFrom:"workday-script"
             }
 
     }

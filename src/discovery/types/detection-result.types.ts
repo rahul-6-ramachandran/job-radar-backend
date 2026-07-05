@@ -2,9 +2,8 @@ export interface DetectionResult {
   ats: string;
   board: string;
   confidence: number;
-  careersUrl?: string;
+  detectedFrom: string;
 }
-
 export interface DiscoveryContext {
   url: string;
   html: string;

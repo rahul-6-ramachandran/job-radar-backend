@@ -3,7 +3,7 @@ export interface CreateJobDto {
   externalJobId: string;
   companyName: string;
   title: string;
-  location?: string;
+  location?: string | null;
   applicationUrl: string;
   employmentType?: string;
   remoteStatus?: boolean;

@@ -38,6 +38,11 @@ export class DiscoveryService {
     });
 
     for (const detector of this.registry.getDetectors()) {
+
+      this.logger.debug(
+          `Trying ${detector.name}`
+      );
+
       const result = await detector.detect({
         url,
         html: data,
@@ -63,29 +68,32 @@ export class DiscoveryService {
   if (!company.careerUrl) {
     return null;
   }
-
-  const result = await this.discover(
-    company.careerUrl,
+  
+    this.logger.log(
+      `Checking ${company.name}`
   );
 
-    if (result) {
-    await this.companyService.updateATS(
-        company.id,
-        result,
-    );
+  const result = await this.discover(company.careerUrl);
 
-    this.logger.log(
-        `${company.name} → ${result.ats} (${result.board})`,
-    );
+  if (!result) {
 
-    return result;
-    }
+      this.logger.warn(
+          `${company.name} -> Unknown ATS`
+      );
 
-    this.logger.warn(
-    `No ATS detected for ${company.name}`,
-    );
+      return;
+  }
 
-return null;
+  this.logger.log(
+      `${company.name} -> ${result.ats} (${result.board})`
+  );
+
+  await this.companyService.updateATS(
+      company.id,
+      result,
+  );
+
+  return null;
 
 }
 

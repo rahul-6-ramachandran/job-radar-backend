@@ -10,7 +10,14 @@ export class CompanyService {
     private readonly prisma : PrismaService
   ) {}
 
-
+async markSynced(id: string) {
+  return this.prisma.company.update({
+    where: { id },
+    data: {
+      lastSyncedAt: new Date(),
+    },
+  });
+}
 
   
 async findUnknownATS() {
@@ -25,7 +32,53 @@ async findUnknownATS() {
   });
 }
 
+async findWithoutHomepage() {
+  return this.prisma.company.findMany({
+    where: {
+      homepageUrl: null,
+    },
+  });
+}
 
+
+async findWithoutCareerUrl() {
+  return this.prisma.company.findMany({
+    where: {
+      homepageUrl: {
+        not: null,
+      },
+      careerUrl: null,
+    },
+  });
+}
+
+async updateCareerUrl(
+  id: string,
+  careerUrl: string,
+) {
+  return this.prisma.company.update({
+    where: {
+      id,
+    },
+    data: {
+      careerUrl,
+    },
+  });
+}
+
+async updateHomepage(
+  id: string,
+  homepageUrl: string,
+) {
+  return this.prisma.company.update({
+    where: {
+      id,
+    },
+    data: {
+      homepageUrl,
+    },
+  });
+}
   async findByATS(ats: string) {
   return this.repository.findEnabledByATS(ats);
 }

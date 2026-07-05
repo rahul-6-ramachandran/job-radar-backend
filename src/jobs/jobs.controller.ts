@@ -1,6 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+} from '@nestjs/common';
+
 import { JobsService } from './jobs.service';
-import { GreenhouseService } from '../sources/greenhouse/greenhouse.service';
 
 @Controller('jobs')
 export class JobsController {
@@ -8,43 +12,49 @@ export class JobsController {
     private readonly jobsService: JobsService,
   ) {}
 
-  @Get('test')
-  async test() {
-    await this.jobsService.upsertJob({
-      source: 'test',
-      externalJobId: '123',
+  @Get()
+  async findAll(
+    @Query('q') q?: string,
 
-      companyName: 'Rahul Corp',
+    @Query('company') company?: string,
 
-      title: 'Backend Engineer',
+    @Query('remote') remote?: string,
 
-      applicationUrl: 'https://example.com',
+    @Query('page') page = '1',
+
+    @Query('limit') limit = '20',
+
+    @Query("source")
+    source?: string,
+
+    @Query("location")
+    location?: string,
+
+    @Query("postedWithinDays")
+    postedWithinDays?: string,
+  ) {
+    return this.jobsService.findAll({
+      q,
+
+      company,
+
+      remote:
+        remote !== undefined
+          ? remote === 'true'
+          : undefined,
+
+      page: Number(page),
+
+      limit: Number(limit),
+
+      source,
+
+      location,
+
+      postedWithinDays:
+          postedWithinDays
+              ? Number(postedWithinDays)
+              : undefined,
     });
-
-    return {
-      success: true,
-    };
   }
-
- @Get()
-findAll(
-  @Query('search') search?: string,
-  @Query('company') company?: string,
-  @Query('remote') remote?: string,
-) {
-  return this.jobsService.findAll({
-    search,
-    company,
-    remote:
-      remote === undefined
-        ? undefined
-        : remote === 'true',
-  });
-}
-
-
-  
-
-  
-
 }

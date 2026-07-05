@@ -1,6 +1,5 @@
-export const isAllowedLocation = (location?: string): boolean => {
-  if (!location) return true; // many jobs don't provide location
-
+export const isAllowedLocation = (location?: string | null): boolean => {
+  if (!location) return true; 
   const l = location.toLowerCase();
 
   const isRemote =
